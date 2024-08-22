@@ -13,6 +13,10 @@ func main() {
 	app := &cli.App{
 		Name:  "dnslive",
 		Usage: "DNS server for dynamic IP addresses",
+		Commands: []*cli.Command{
+			clientCommand,
+			serverCommand,
+		},
 		Action: func(c *cli.Context) error {
 
 			// Wait for SIGINT or SIGTERM
