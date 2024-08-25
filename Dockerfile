@@ -9,5 +9,5 @@ RUN go build -v -o /usr/local/bin/dnslive ./...
 
 # Create the final container with only the binary
 FROM scratch
-COPY --from=1 /usr/local/bin/dnslive /usr/local/bin/
+COPY --from=0 /usr/local/bin/dnslive /usr/local/bin/
 ENTRYPOINT ["dnslive"]
