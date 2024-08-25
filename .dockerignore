@@ -1,0 +1,8 @@
+/.git/
+/.gitignore
+/dnslive
+/dnslive.exe
+/Dockerfile
+/entries.json
+/LICENSE.txt
+/README.md
