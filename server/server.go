@@ -59,6 +59,7 @@ func New(cfg *Config) (*Server, error) {
 				Addr:      cfg.DnsServerAddr,
 				Net:       "udp",
 				Handler:   &h,
+				ReuseAddr: true,
 				ReusePort: true,
 			},
 			logger:   log.With().Str("package", "server").Logger(),
