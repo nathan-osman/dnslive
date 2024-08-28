@@ -10,4 +10,5 @@ type Config struct {
 	KeyFilename    string        `yaml:"key_filename"`
 	ServerAddr     string        `yaml:"server_addr"`
 	Interval       time.Duration `yaml:"interval"`
+	Name           string        `yaml:"name"`
 }

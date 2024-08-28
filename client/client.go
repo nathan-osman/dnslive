@@ -14,6 +14,8 @@ import (
 type Client struct {
 	client     http.Client
 	logger     zerolog.Logger
+	serverAddr string
+	name       string
 	closeChan  chan any
 	closedChan chan any
 }
@@ -77,6 +79,8 @@ func New(cfg *Config) (*Client, error) {
 			},
 		},
 		logger:     log.With().Str("package", "client").Logger(),
+		serverAddr: cfg.ServerAddr,
+		name:       cfg.Name,
 		closeChan:  make(chan any),
 		closedChan: make(chan any),
 	}
@@ -87,6 +91,6 @@ func New(cfg *Config) (*Client, error) {
 }
 
 func (c *Client) Close() {
-	close(c.closedChan)
+	close(c.closeChan)
 	<-c.closedChan
 }
