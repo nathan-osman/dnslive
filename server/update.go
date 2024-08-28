@@ -10,7 +10,7 @@ import (
 type updateParams struct {
 	Name string `json:"name"`
 	Ipv4 string `json:"ipv4"`
-	IPv6 string `json:"ipv6"`
+	Ipv6 string `json:"ipv6"`
 }
 
 func (s *Server) update(w http.ResponseWriter, r *http.Request) {
@@ -31,7 +31,7 @@ func (s *Server) update(w http.ResponseWriter, r *http.Request) {
 		e := s.entries[v.Name]
 		e.LastUpdate = time.Now()
 		e.Ipv4 = v.Ipv4
-		e.Ipv6 = v.IPv6
+		e.Ipv6 = v.Ipv6
 		s.entries[v.Name] = e
 		return s.save()
 	}(); err != nil {
