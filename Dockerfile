@@ -10,4 +10,5 @@ RUN go build -v -o /usr/local/bin/dnslive
 # Create the final container with only the binary
 FROM scratch
 COPY --from=0 /usr/local/bin/dnslive /usr/local/bin/
+ADD https://curl.se/ca/cacert.pem /etc/ssl/certs/
 ENTRYPOINT ["dnslive"]
