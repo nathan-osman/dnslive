@@ -12,8 +12,8 @@ func main() {
 		Name:  "dnslive",
 		Usage: "DNS server for dynamic IP addresses",
 		Commands: []*cli.Command{
-			clientCommand,
-			serverCommand,
+			clientCommand(),
+			serverCommand(),
 		},
 	}
 	if err := app.Run(os.Args); err != nil {
