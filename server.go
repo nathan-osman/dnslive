@@ -30,7 +30,6 @@ var serverCommand = &cli.Command{
 			return err
 		}
 		defer s.Close()
-		waitForInterrupt()
-		return nil
+		return run()
 	},
 }
