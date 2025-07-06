@@ -14,20 +14,28 @@ func serverCommand() *cli.Command {
 			Args:            []string{"server"},
 			RequiresNetwork: true,
 		}
-		p = a.Platform()
+		p          = a.Platform()
+		configFlag = &cli.StringFlag{
+			Name:     "config",
+			Usage:    "path to a configuration file",
+			Required: true,
+			EnvVars:  []string{"CONFIG"},
+		}
+		installCommand = gosvc.InstallCommand(p)
 	)
+	installCommand.Flags = append(installCommand.Flags, configFlag)
 	return &cli.Command{
 		Name:  "server",
 		Usage: "run the application in server mode",
 		Flags: []cli.Flag{
-			&cli.StringFlag{
-				Name:     "config",
-				Usage:    "path to a configuration file",
-				Required: true,
-				EnvVars:  []string{"CONFIG"},
-			},
+			configFlag,
 		},
-		Subcommands: gosvc.Commands(p),
+		Subcommands: []*cli.Command{
+			installCommand,
+			gosvc.RemoveCommand(p),
+			gosvc.StartCommand(p),
+			gosvc.StopCommand(p),
+		},
 		Action: func(ctx *cli.Context) error {
 			v := server.Config{
 				HttpServerAddr: "0.0.0.0:443",
