@@ -8,6 +8,7 @@ import (
 
 func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 	m := new(dns.Msg)
+	m.Authoritative = true
 	m.SetReply(r)
 	func() {
 		s.mutex.RLock()
