@@ -23,15 +23,16 @@ type entry struct {
 }
 
 type Server struct {
-	mutex      sync.RWMutex
-	httpServer http.Server
-	dnsServer  dns.Server
-	logger     zerolog.Logger
-	zone       string
-	nameserver string
-	mailbox    string
-	filename   string
-	entries    map[string]entry
+	mutex        sync.RWMutex
+	httpServer   http.Server
+	dnsTCPServer dns.Server
+	dnsUDPServer dns.Server
+	logger       zerolog.Logger
+	zone         string
+	nameserver   string
+	mailbox      string
+	filename     string
+	entries      map[string]entry
 }
 
 func New(cfg *Config) (*Server, error) {
@@ -59,7 +60,12 @@ func New(cfg *Config) (*Server, error) {
 					ClientAuth: tls.RequireAndVerifyClientCert,
 				},
 			},
-			dnsServer: dns.Server{
+			dnsTCPServer: dns.Server{
+				Addr:    cfg.DnsServerAddr,
+				Net:     "tcp",
+				Handler: &h,
+			},
+			dnsUDPServer: dns.Server{
 				Addr:      cfg.DnsServerAddr,
 				Net:       "udp",
 				Handler:   &h,
@@ -97,11 +103,20 @@ func New(cfg *Config) (*Server, error) {
 	// Handle incoming DNS requests
 	h.HandleFunc(".", s.respond)
 
-	// Listen for DNS requests
+	// Listen for TCP DNS requests
 	go func() {
-		defer s.logger.Info().Msg("DNS server stopped")
-		s.logger.Info().Msg("DNS server starting...")
-		if err := s.dnsServer.ListenAndServe(); err != nil {
+		defer s.logger.Info().Msg("TCP DNS server stopped")
+		s.logger.Info().Msg("TCP DNS server starting...")
+		if err := s.dnsTCPServer.ListenAndServe(); err != nil {
+			s.logger.Error().Msg(err.Error())
+		}
+	}()
+
+	// Listen for UDP DNS requests
+	go func() {
+		defer s.logger.Info().Msg("UDP DNS server stopped")
+		s.logger.Info().Msg("UDP DNS server starting...")
+		if err := s.dnsUDPServer.ListenAndServe(); err != nil {
 			s.logger.Error().Msg(err.Error())
 		}
 	}()
@@ -123,5 +138,6 @@ func New(cfg *Config) (*Server, error) {
 
 func (s *Server) Close() {
 	s.httpServer.Shutdown(context.Background())
-	s.dnsServer.Shutdown()
+	s.dnsTCPServer.Shutdown()
+	s.dnsUDPServer.Shutdown()
 }
