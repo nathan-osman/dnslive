@@ -33,7 +33,7 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 		}
 
 		// If the q is within the zone, remove the zone from the name
-		before, found := strings.CutSuffix("."+q.Name, s.zone)
+		before, found := strings.CutSuffix(q.Name, "."+s.zone)
 		if !found {
 			continue
 		}

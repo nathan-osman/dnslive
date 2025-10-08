@@ -75,9 +75,15 @@ func New(cfg *Config) (*Server, error) {
 		}
 	)
 
-	// Ensure zone ends with a "." to make it a FQDN
+	// Ensure names end with a "."
 	if !strings.HasSuffix(s.zone, ".") {
 		s.zone += "."
+	}
+	if !strings.HasSuffix(s.nameserver, ".") {
+		s.nameserver += "."
+	}
+	if !strings.HasSuffix(s.mailbox, ".") {
+		s.mailbox += "."
 	}
 
 	// Load the existing entries
