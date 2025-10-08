@@ -1,6 +1,7 @@
 package server
 
 type Config struct {
+	Debug          bool   `yaml:"debug"`
 	Zone           string `yaml:"zone"`
 	Nameserver     string `yaml:"nameserver"`
 	Mailbox        string `yaml:"mailbox"`

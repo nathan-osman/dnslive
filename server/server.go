@@ -28,6 +28,7 @@ type Server struct {
 	dnsTCPServer dns.Server
 	dnsUDPServer dns.Server
 	logger       zerolog.Logger
+	debug        bool
 	zone         string
 	nameserver   string
 	mailbox      string
@@ -73,6 +74,7 @@ func New(cfg *Config) (*Server, error) {
 				ReusePort: true,
 			},
 			logger:     log.With().Str("package", "server").Logger(),
+			debug:      cfg.Debug,
 			zone:       cfg.Zone,
 			nameserver: cfg.Nameserver,
 			mailbox:    cfg.Mailbox,

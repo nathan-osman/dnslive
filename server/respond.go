@@ -19,6 +19,11 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 	// Loop over each question
 	for _, q := range r.Question {
 
+		// Log the query if requested
+		if s.debug {
+			s.logger.Debug().Msg(q.String())
+		}
+
 		// Handle SOA requests to the zone
 		if q.Name == s.zone {
 			if q.Qtype == dns.TypeSOA {
