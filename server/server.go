@@ -7,6 +7,7 @@ import (
 	"errors"
 	"net/http"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -26,6 +27,9 @@ type Server struct {
 	httpServer http.Server
 	dnsServer  dns.Server
 	logger     zerolog.Logger
+	zone       string
+	nameserver string
+	mailbox    string
 	filename   string
 	entries    map[string]entry
 }
@@ -62,11 +66,19 @@ func New(cfg *Config) (*Server, error) {
 				ReuseAddr: true,
 				ReusePort: true,
 			},
-			logger:   log.With().Str("package", "server").Logger(),
-			filename: cfg.PersistentFile,
-			entries:  make(map[string]entry),
+			logger:     log.With().Str("package", "server").Logger(),
+			zone:       cfg.Zone,
+			nameserver: cfg.Nameserver,
+			mailbox:    cfg.Mailbox,
+			filename:   cfg.PersistentFile,
+			entries:    make(map[string]entry),
 		}
 	)
+
+	// Ensure zone ends with a "." to make it a FQDN
+	if !strings.HasSuffix(s.zone, ".") {
+		s.zone += "."
+	}
 
 	// Load the existing entries
 	if err := s.load(); err != nil && !os.IsNotExist(err) {

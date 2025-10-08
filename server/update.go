@@ -3,7 +3,6 @@ package server
 import (
 	"encoding/json"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -22,12 +21,6 @@ func (s *Server) update(w http.ResponseWriter, r *http.Request) {
 	if err := func() error {
 		s.mutex.Lock()
 		defer s.mutex.Unlock()
-
-		// Ensure name ends in "."
-		if !strings.HasSuffix(v.Name, ".") {
-			v.Name += "."
-		}
-
 		e := s.entries[v.Name]
 		e.LastUpdate = time.Now()
 		e.Ipv4 = v.Ipv4

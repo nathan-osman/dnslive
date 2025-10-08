@@ -32,6 +32,9 @@ The configuration file is in YAML format and consists of the following keys:
 
 | Key | Description | Default |
 |---|---|---|
+| `zone` | zone that dnslive will be responding to queries for ||
+| `nameserver` | primary nameserver for the zone ||
+| `mailbox` | administrator email address ||
 | `ca_cert_filename` | certificate authority used to sign the connecting clients ||
 | `cert_filename` | certificate presented to connecting clients ||
 | `key_filename` | private key for certificate ||
@@ -54,4 +57,4 @@ The configuration consists of the following keys:
 | `key_filename` | private key for certificate ||
 | `server_addr` | address to use for the server ||
 | `interval` | update interval for checking IP address(es) | `1h` |
-| `name` | domain name to reserve on the server ||
+| `name` | name within the zone to reserve on the server ||
