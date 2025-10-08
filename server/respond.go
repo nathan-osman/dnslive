@@ -46,7 +46,7 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 		// Now extract the name (the last part of the value)
 		var (
 			parts = strings.Split(before, ".")
-			name  = parts[len(parts)-1]
+			name  = strings.ToLower(parts[len(parts)-1])
 		)
 
 		// Check to see if the name is valid
