@@ -24,11 +24,14 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 			s.logger.Debug().Msg(q.String())
 		}
 
+		// Convert to lowercase before evaluating
+		qName := strings.ToLower(q.Name)
+
 		// Handle SOA requests to the zone
-		if q.Name == s.zone {
+		if qName == s.zone {
 			if q.Qtype == dns.TypeSOA {
 				m.Answer = append(m.Answer, &dns.SOA{
-					Hdr:    dns.RR_Header{Name: s.zone, Rrtype: dns.TypeSOA, Class: dns.ClassINET, Ttl: 3600},
+					Hdr:    dns.RR_Header{Name: q.Name, Rrtype: dns.TypeSOA, Class: dns.ClassINET, Ttl: 3600},
 					Ns:     s.nameserver,
 					Mbox:   s.mailbox,
 					Serial: 1,
@@ -38,7 +41,7 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 		}
 
 		// If the q is within the zone, remove the zone from the name
-		before, found := strings.CutSuffix(q.Name, "."+s.zone)
+		before, found := strings.CutSuffix(qName, "."+s.zone)
 		if !found {
 			continue
 		}
