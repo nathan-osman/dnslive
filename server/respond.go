@@ -80,4 +80,9 @@ func (s *Server) respond(w dns.ResponseWriter, r *dns.Msg) {
 			}
 		}
 	}
+
+	// Write the reply
+	if err := w.WriteMsg(m); err != nil {
+		s.logger.Error().Msg(err.Error())
+	}
 }
